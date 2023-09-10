@@ -30,6 +30,8 @@ In an [article in Vertex magazine](https://tmblr.co/ZRaqvp1x7yvmD) he explains
 a way to cut a cube into 8 octants. It turns out that if you look at all the 
 possibilities of having an octant filled or not is 2 to the power of 8 (256).
 
+![cubes as 8bit ints](cubes.png)
+
 Looking at this like an 8 bit integer means we have "cube IDs" from 0 to 255.
 If you have all these tiles, you will _never_ have an unsolvable grid of voxel data.
 
@@ -40,8 +42,6 @@ or flipped versions of other permutations. He reduced that to 67 unique cases.
 I ended up with 53.. I'm still curious how we got different results.
 
 I'm not much of an artist. 53 was still too many for me!
-
-# Back to manually enumerating tiles
 
 In my initial attempt, I got pretty far by manually enumerating all the
 possibilities needed for an infinite grid. Surely I could manually come up with
