@@ -1,4 +1,76 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://landow.dev/'
 languageCode = 'en-us'
-title = "Steven's Blog"
-theme = 'hugo-bearblog'
+
+[outputs]
+home = [ "HTML" ]
+page = [ "HTML" ]
+section = [ "HTML", "RSS" ]
+
+[languages.en]
+languageName = "English"
+weight = 1
+title = "Dirt is Food"
+
+# [languages.zh-cn]
+# languageName = "简体中文"
+# weight = 3
+# title = "Hextra"
+
+[module]
+  [module.hugoVersion]
+  extended = true
+  min = "0.111.0"
+
+  [module.imports]
+  path = "hextra"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.highlight]
+noClasses = false
+
+[[menu.main]]
+identifier = "posts"
+name = "Posts"
+pageRef = "/posts"
+weight = 1
+
+[[menu.main]]
+name = "Search"
+weight = 3
+
+  [menu.main.params]
+  type = "search"
+
+[[menu.main]]
+name = "GitHub"
+weight = 5
+url = "https://github.com/stevenctl"
+
+  [menu.main.params]
+  icon = "github"
+
+[[menu.sidebar]]
+  
+
+[params]
+description = "TODO"
+displayUpdatedDate = false
+dateFormat = "January 2, 2006"
+
+  [params.navbar]
+  displayTitle = true
+  displayLogo = true
+
+    [params.navbar.logo]
+    path = "images/logo.png"
+    dark = "images/logo.png"
+
+  [params.footer]
+  displayCopyright = true
+  displayPoweredBy = true
+
+  [params.search]
+  enable = true
+
