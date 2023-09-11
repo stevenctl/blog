@@ -1,6 +1,6 @@
 ---
 title: Art
-weight: 1
+weight: 2
 ---
 
 I don't consider myself much of an artist. To learn 3D, I could either download other people's

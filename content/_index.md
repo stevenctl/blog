@@ -1,18 +1,31 @@
-This blog is not intended to be some super polished thing.
-I bought the domain [landow.dev](https://landow.dev) a while back and needed to put it to use.
+---
+title: Steven's Blog
+---
 
-The goal is to write things down as I learn them. The format might seem like I'm trying to be
-instructional. Take it all with a grain of salt. If I bothered to write something on this blog,
-it's guaranteed that I'm not an expert on it.
+This blog is still a work in progress. The posts about WFC were the original
+motivation for creating the blog, but I think journaling about the things I've
+been trying out will make them stick better.
+
+I'll probably rewrite those posts into something more coherent before moving on
+and adding new content.
 
 ---
 
-Although I'm writing over a year later I'm backdating the posts in this blog.
-My goal is to fill the first few posts with snapshots of what I have slowly worked on
-for the past few years. The project/projects only received a few hours of work each week.
-Sometimes there were very long breaks where I didn't play with it for over a month.
+{{< cards >}}
 
-Hopefully the first few posts will be enough to "catch up" to what I am doing now.
+    {{< card
+        link="posts/art"
+        title="Art"
+        icon="pencil"
+        image="/posts/art/art-thumb.png" 
+    >}}
 
----
+    {{< card 
+        link="/posts/tech/wfc/wfc-01-intro" 
+        title="Wave Function Collapse" 
+        icon="view-grid-add" 
+        image="/posts/tech/wfc/wfc-thumb.png" 
+    >}}
+
+{{< /cards >}}
 

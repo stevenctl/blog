@@ -1,6 +1,7 @@
 +++
 title = "Wave Function Collapse: Enumerating tiles"
 date = 2023-08-26
+weight = 2
 +++
 
 Oskar Stålberg's and BorisTheBrave's willingness to share the dirty
