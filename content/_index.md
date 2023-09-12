@@ -35,4 +35,3 @@ and adding new content.
     >}}
 
 {{< /cards >}}
-

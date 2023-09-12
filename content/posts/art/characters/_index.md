@@ -17,12 +17,13 @@ leftover clay.
 
 ![skin workflow](skin.png)
 
-For this, I used a
-[Skin Modifier](https://docs.blender.org/manual/en/latest/modeling/modifiers/generate/skin.html)
-and
-[Subdivision Surface](https://docs.blender.org/manual/en/latest/modeling/modifiers/generate/subdivision_surface.html)
+For this, I used a [Skin
+Modifier](https://docs.blender.org/manual/en/latest/modeling/modifiers/generate/skin.html)
+and [Subdivision
+Surface](https://docs.blender.org/manual/en/latest/modeling/modifiers/generate/subdivision_surface.html)
 based workflow. Joey Carlino has some great
-[tutorials](https://www.youtube.com/watch?v=DAAwy_l4jw4&t=2s) for this on YouTube.
+[tutorials](https://www.youtube.com/watch?v=DAAwy_l4jw4&t=2s) for this on
+YouTube.
 
 The significant advantage is that we only work with a skeleton instead of actual
 geometry until the modifier is applied. This approach delays the need to think
@@ -40,10 +41,10 @@ My first run/walk cycle! I'm proud of it. At first, I was resigned to using
 wasn't compatible with my stylized characters' oversized heads. The animations
 were too "real" as well. The model is cartoony, and the motion should be too.
 
-I read the first few chapters of
-[The Animator's Survival Kit](http://www.theanimatorssurvivalkit.com/) because
-winging it produced unsatisfying results. While my focus will never be
-animation, learning the basic concepts went a long way.
+I read the first few chapters of [The Animator's Survival
+Kit](http://www.theanimatorssurvivalkit.com/) because winging it produced
+unsatisfying results. While my focus will never be animation, learning the basic
+concepts went a long way.
 
 ![cat wireframe](cat-wire.png)
 
@@ -55,8 +56,8 @@ more smoothness/roundness in the mesh. I got to try out some topology tricks at
 the knees and elbows to help them deform properly.
 
 I just copied the head and cut out some parts to make the helmet. Same with the
-boots. I lifted the armor from the
-[Synty Fantasy Hero](https://syntystore.com/products/polygon-modular-fantasy-hero-characters)
+boots. I lifted the armor from the [Synty Fantasy
+Hero](https://syntystore.com/products/polygon-modular-fantasy-hero-characters)
 asset pack and played with the scale until it fit the character. I don't plan to
 keep it long-term , but it looks good enough for now.
 

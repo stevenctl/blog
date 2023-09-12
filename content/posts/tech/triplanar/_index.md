@@ -3,24 +3,25 @@ title = "Triplanar with Deep Parallax in Godot"
 weight = 1
 +++
 
-A handful of people have asked if Godot can support height mapping
-in combination with triplanar sampling. Height mapping is a very cool
-technique that adds a ton of detail without extra geometry. While modern
-game engines and hardware can handle an insane number of triangles,
-my workflow for creating models that tile perfectly cannot. 
+A handful of people have asked if Godot can support height mapping in
+combination with triplanar sampling. Height mapping is a very cool technique
+that adds a ton of detail without extra geometry. While modern game engines and
+hardware can handle an insane number of triangles, my workflow for creating
+models that tile perfectly cannot.
 
-The reason I'm using triplanar texture coordinates is that I rotate
-and flip tiles around. This could introduce seams unless I do something
-clever like flipping and rotating UVs around some point. I'm also pretty sure
-that even if I do that, it means I can't scale the UVs arbitrarily.
+The reason I'm using triplanar texture coordinates is that I rotate and flip
+tiles around. This could introduce seams unless I do something clever like
+flipping and rotating UVs around some point. I'm also pretty sure that even if I
+do that, it means I can't scale the UVs arbitrarily.
 
-While in the [feature request](https://github.com/godotengine/godot-proposals/issues/5530)
-one of the Godot maintainers warns that doing a texture fetch in a loop is already slow,
-and with a triplanar shader you're multiplying the total number by 3. 
+While in the [feature
+request](https://github.com/godotengine/godot-proposals/issues/5530) one of the
+Godot maintainers warns that doing a texture fetch in a loop is already slow,
+and with a triplanar shader you're multiplying the total number by 3.
 
-I decided to ignore that advice and see how bad it performed. After taking their 
-suggestion to reduce the number of iterations because it won't be noticeable
-in practice, it didn't cause any FPS drops on my beefy gaming PC. 
+I decided to ignore that advice and see how bad it performed. After taking their
+suggestion to reduce the number of iterations because it won't be noticeable in
+practice, it didn't cause any FPS drops on my beefy gaming PC.
 
 The effect is turned up a bit to make it extra apparent int he sample. The floor
 shouldn't be offset so strongly if you want to have a character walk on it.
@@ -29,16 +30,17 @@ shouldn't be offset so strongly if you want to have a character walk on it.
 
 <video src="pom.mp4" autoplay muted loop></video>
 
-There is a ton of detail in the floor and walls. Some bricks/stones
-occlude others. It's really awesome.
+There is a ton of detail in the floor and walls. Some bricks/stones occlude
+others. It's really awesome.
 
 ## Normal Map Only
 
 <video src="norm.mp4" autoplay muted loop></video>
 
-If performance does become and issue, using the normal map textures
-seems to be good enough. This is using the simplest "swizzle" approach from
-Ben Golus's [Normal Mapping for a Triplanar Shader](https://bgolus.medium.com/normal-mapping-for-a-triplanar-shader-10bf39dca05a)
+If performance does become and issue, using the normal map textures seems to be
+good enough. This is using the simplest "swizzle" approach from Ben Golus's
+[Normal Mapping for a Triplanar
+Shader](https://bgolus.medium.com/normal-mapping-for-a-triplanar-shader-10bf39dca05a)
 tutorial, and I think the results are just fine.
 
 Without this fix, you get very wrong normals. It's subtle in this sample scene
@@ -48,15 +50,16 @@ but areas in negative directions start looking dark in a confusing way.
 
 <video src="normcompare.mp4" autoplay muted loop></video>
 
-It's subtle, but I really think the normal texture adds a lot of depth and detail
-versus the flatness of the mesh normals. 
+It's subtle, but I really think the normal texture adds a lot of depth and
+detail versus the flatness of the mesh normals.
 
 ## The Shader
 
-Here's the code for those who are interested. It's mostly me gluing code from various
-tutorials together. Also there's some unnessary conditionals I have for toggling the ability
-to use two sets of textures for the walls and floor. In reality there should be a separate shader
-for each, or some `IFDEF` preprocessor stuff instead of a runtime check.
+Here's the code for those who are interested. It's mostly me gluing code from
+various tutorials together. Also there's some unnessary conditionals I have for
+toggling the ability to use two sets of textures for the walls and floor. In
+reality there should be a separate shader for each, or some `IFDEF` preprocessor
+stuff instead of a runtime check.
 
 ```c
 shader_type spatial;
@@ -217,4 +220,3 @@ void fragment() {
     NORMAL = normalize((VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 ```
-
