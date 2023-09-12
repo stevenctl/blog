@@ -1,3 +1,0 @@
----
-title: Wave Function Collapse
----

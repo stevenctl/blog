@@ -1,7 +1,6 @@
 +++
 title = "Wave Function Collapse: Adjacency data"
-date = 2023-08-26
-weight = 3
+weight = 6
 +++
 
 In the previous post, we discussed how we could use 8 bit integers to represent

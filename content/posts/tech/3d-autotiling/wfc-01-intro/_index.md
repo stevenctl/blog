@@ -1,7 +1,6 @@
 +++
 title = "Wave Function Collapse: First attempt"
-date = 2023-08-26
-weight = 1
+weight = 4
 +++
 
 At some point in time I followed some indie devs on Twitter. I'd occasionally see retweets of

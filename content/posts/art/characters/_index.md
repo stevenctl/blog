@@ -3,7 +3,7 @@ title: Characters and Animation
 weight: 1
 ---
 
-<video src="showcase.mp4" autoplay loop></video>
+<video src="showcase.mp4" autoplay muted loop></video>
 
 I haven't spent a _ton_ of time character modeling. 
 This is what I've been able to make so far.
@@ -34,7 +34,7 @@ aren't perfect just using the modifiers.
 
 ## Cat Knight 
 
-<video src="cat-run.mp4" autoplay loop></video>
+<video src="cat-run.mp4" autoplay muted loop></video>
 
 This is my first run/walk cycle! I'm pretty proud of it.
 At first I was resigned to using [Mixamo](https://www.mixamo.com/#/)

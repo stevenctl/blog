@@ -72,10 +72,14 @@ dateFormat = "January 2, 2006"
     [params.navbar.logo]
     path = "images/logo.png"
     dark = "images/logo.png"
+    link = "/"
+    width =  40
+    height = 40
 
   [params.footer]
   displayCopyright = true
   displayPoweredBy = true
+  copyright = "foobar inc."
 
   [params.search]
   enable = true
