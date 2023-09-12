@@ -3,21 +3,20 @@ title: Train Station
 ---
 
 I saw [this](https://joshuaautumn.artstation.com/projects/qAmeAz) picture on
-Reddit or something and I decided to (sorta) recreate it. There were other
-decorations I wanted to put in the train station like a Goblin themed vending
-machine, and better looking torches. I needed to wrap it up and move on though.
+Reddit or something, and I decided to recreate it. There were other decorations
+I wanted to put in the train station, like a Goblin-themed vending machine and
+better-looking torches. I needed to wrap it up and move on.
+To build the environment, I re-used the tileset that I made for my Wave Function
+Collapse level editor. Rather than copying the tiles into this blender file and
+arranging the tiles by hand, I was able to use my level editor in Godot, then
+snapshot the scene using
+[PackedScene](https://docs.godotengine.org/en/stable/classes/class_packedscene.html),
+and export the `tscn` as GLTF, which I then imported in Blender.
 
-To build the environment, I re-used my tileset that I made for my Wave Function
-Collapse based level editor. Rather than copying the tiles into this blender
-file and arranging them by hand I was able to use the level editor in godot,
-save the scene using
-[PackedScene](https://docs.godotengine.org/en/stable/classes/class_packedscene.html)
-and then Godot let me export to GLTF, which I then imported in blender.
-
-The major caveat is that even though may tiles are re-used, the export
-duplicated mesh data for each instance. I plan on looking into into whether this
-is something that can be optimized in Godot's exporter or is a restriction in
-the GLTF format. The `blend` file should not be 90 megabytes.
+The major caveat is that even though many tiles are re-used throughout the
+scene, the exported GLTF contains duplicated mesh data. I plan on looking into
+whether this is something that can be optimized in Godot's exporter or is a
+restriction in the GLTF format. The `blend` file should not be 90 megabytes.
 
 ---
 
@@ -51,10 +50,10 @@ Knight's stag.
 
 ![wireframe](train-wire.png)
 
-One lesson in this project is that it's not always worth it to cut holes in
-things that will never deform and you can cover using separate objects. It was
-also the first time I'd really used the bevel modifier and needed to keep the
-topology clean enough for smooth shading.
+One lesson I learned during this project is that it's probably not worth cutting
+holes in things that will never deform, and you can cover them using separate
+objects. It was also the first time I'd used the bevel modifier, and I needed to
+keep the topology clean enough for smooth shading.
 
 ![wireframe](train-wire-inside.png)
 
@@ -65,33 +64,26 @@ the train.
 
 ![pallete](pallete.png)
 
-To color, I used a simple pallete texture. Entire faces are each assigned a
+To color, I used a simple palette texture. Entire faces are each assigned a
 color using this texture. Except for the "LCD" screen on the front of the train.
-Although this is based on a Japanese subway train, I don't know Japanese. I know
-a tiny bit of Mandarin, but I don't really know how to write it. If I understand
-correctly, a lot of characters are used in Japan as well. Anyway, my wife and I
-thought  it would be funny if it said the destination was "Train Station".
+While I referenced a Japanese subway train, I can't speak or read Japanese. My
+wife can read Chinese, and I learned from her that some borrowed characters
+exist in Japanese. The literal Chinese translation of 洞爷湖 says "Hole Lord
+Lake" should be Lake Tōya. We thought it would be funny if the train's
+destination were simply "Train Station" (火车站). Since I'm learning Mandarin, I
+will stick to Chinese characters.
 
 ![emissive check](emissive.png)
 
 I wanted only the text on the screen to be emissive. It probably isn't the
-simplest solution, but the first thing I thought of is to check for certain
-colors and plug that into the "emsisive" socket of Blender's BSDF node. I ended
-up also using that for the lights on the interior.
+simplest solution, but I first thought to check for specific colors and plug
+that into the "emissive" socket of Blender's BSDF node. I ended up also using
+that for the lights on the interior.
 
 ![levitation](levitation.png)
 
-I didn't feel like modeling anything else, so for the underneath of the train
-we're just gonna say "it's magic". I decided to mess around with some built-in
-noise textures and the Wave Texture node is pretty cool. I made parts of it
-transparent and most of it emissive and it looked deceint. Plugging it into the
-volume output looked decent in the render so I left it.
-
-![seams](seams.png)
-
-The walls use some PBR textures [I bought from
-CGTrader](https://www.cgtrader.com/3d-models/textures/miscellaneous/stylized-pbr-textures-bundle)
-(well worth it imo). I'll probably talk about it later, but I can't/don't want
-to unwrap these tiles, so I use a triplanar mapping. I still can't figure out a
-good way to make Blender ignore object rotations when using this. For the tiles
-visible in the render, I unroated the objects and rotated the geometry instead.
+I didn't feel like modeling anything else. Instead of building the mechanisms
+beneath the train car, we will say, "It's magic." I decided to mess around with
+some built-in noise textures, and the Wave Texture node is pretty cool. I made
+parts of it transparent and most of it emissive. The result is decent. Plugging
+it into the volume output seemed fine in the render, so I left it.
