@@ -1,7 +1,9 @@
 ---
-title: Generating a 3D Tileset
+title: Better WFC
 weight: 3
 ---
+
+## Problems
 
 ## Enumerating Tiles
 
