@@ -1,7 +1,20 @@
 ---
-title: Better WFC
+title: WFC Improvements
 weight: 3
 ---
+
+## Driven WFC
+
+[BorisTheBrave
+describes](https://www.boristhebrave.com/2021/06/06/driven-wavefunctioncollapse/)
+Townscaper as "Driven WFC". That is, WFC but we set up the initial conditions
+with some intention. Let's take the implementation from [last post](../02-basic-wfc/)
+and feed it some specific coordinates. We'll remove `empty` 
+from the possibilities list at those coordinates, and force
+all the other cells to be `empty` before running `solve`.
+
+![driven wfc](shape-wfc-normals.png)
+
 
 ## Problems
 

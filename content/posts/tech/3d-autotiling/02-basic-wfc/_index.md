@@ -48,14 +48,15 @@ make one more choice.
 ![decision tree](tree.jpg)
 
 We end up with a solid number of possible final states even in our limited
-example. The tree depth logically cannot exceed the number of cells we have to
-fill. In practice, we will rarely make a random choice for most cells. After a
+example. The number of choices is less than or equal to the number of cells.
+In practice, we rarely make a random choice for the majority cells. After a
 few essential cells are collapsed, the propagation step chooses by process of
-elimination.
+elimination. The worst case, performance-wise, is if we have so many compatible tiles
+that we don't quickly prune possibilities in the first few iterations.
 
 ## Types
 
-We have a few foundational types that make up the implementation:
+I have a handful of foundational structures in my implementation.
 
 ### Prototypes
 
@@ -308,33 +309,6 @@ because the meshes are so simple. The plan was that I would run this on the
 simple versions, and then re-use that data after I add details and art to the
 meshes.
 
-#### Special "empty" Tile
-
-```python
-{
-    "name": "empty",
-    "mesh": "",
-    "rotation": 0,
-    "north": "empty;empty_only",
-    "east": "empty;empty_only",
-    "south": "empty;empty_only",
-    "west": "empty;empty_only",
-    "top": "v_empty;v_empty_only",
-    "bottom": "v_empty;v_empty_only",
-}
-```
-
-We have to hardcode a couple prototypes that we won't model: `empty` and
-`empty_interior`. The `empty` tile is extra special, because it has multiple
-sockets on every face.
-
-* An `empty` tile can allow the `empty` socket from any tile.
-* A tile with a mesh that has an `empty` socket shouldn't connect to other
-  other meshes outside faces.
-
-This is not strictly required to have solvable grids. It improves the result by
-preventing walls being too close together, or repetitive patterns. I ended up
-abandoning this as well.
 
 ## Conclusion
 
