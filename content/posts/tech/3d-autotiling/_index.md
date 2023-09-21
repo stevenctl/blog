@@ -21,14 +21,17 @@ I don't think I would have become interested in shooters if it weren't for Halo
 3's forge mode. I probably logged 1000 hours in Minecraft when I was a kid (and
 learned Java because of it!). Games that let you make stuff are the best.
 
+In a future post I will show a complete demo of the workflow starting from
+Blender, to the in-engine builder and finally having a character run around
+in a scene created with the builder. 
+
 ---
 
 ## Writeup
 
-The following will attempt to semi-interactive where possible. Unfortunately I
-did a lot in Godot 4.0 which doesn't support web export for Mono/C# yet. These
-aren't intended to be full on tutorials, but it should be possible to fill in
-the gaps if I explained things well enough.
+The following posts are a technical breakdown of stepping stones
+towards a decent WFC workflow. They still need some editing,
+but I think they're cohesive enough to share.
 
 {{< cards >}}
     {{< card
