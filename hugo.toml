@@ -61,7 +61,7 @@ url = "https://github.com/stevenctl"
   
 
 [params]
-description = "TODO"
+description = "Brain dump with a URL."
 displayUpdatedDate = false
 dateFormat = "January 2, 2006"
 
