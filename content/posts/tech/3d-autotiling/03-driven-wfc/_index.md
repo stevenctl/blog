@@ -30,7 +30,7 @@ to _only_ the `empty` prototype. The full implementation is
 
 This is the result:
 
-<video src="inconsistent.mp4" autoplay muted loop></video>
+<video src="inconsistent.webm" autoplay muted loop></video>
 
 ## Ambiguous Cases
 
@@ -75,7 +75,7 @@ filled cells can't use their `empty` side to connect to other filled cells now.
 
 ### The Donut Case
 
-<video src="donut.mp4" autoplay muted loop></video>
+<video src="donut.webm" autoplay muted loop></video>
 
 Stopping empty sockets from connecting to each other restricts
 us from getting some valid results. It is also insufficient.

@@ -3,7 +3,7 @@ title = "2D Autotiling with Simplified Marching Squares"
 weight = 1
 +++
 
-<video src="demo.mp4" autoplay muted loop></video>
+<video src="demo.webm" autoplay muted loop></video>
 
 ## Motivation
 
@@ -96,7 +96,7 @@ passing it to a compute shader.
 
 ### Cursor
 
-<video src="step-1.mp4" autoplay muted loop></video>
+<video src="step-1.webm" autoplay muted loop></video>
 
 Pretty simple:
 

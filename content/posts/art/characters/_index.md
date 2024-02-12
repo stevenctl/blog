@@ -3,7 +3,7 @@ title: Characters and Animation
 weight: 1
 ---
 
-<video src="showcase.mp4" autoplay muted loop></video>
+<video src="showcase.webm" autoplay muted loop></video>
 
 I have yet to spend a _ton_ of time character modeling. These characters are the
 best of what I've made so far.
@@ -34,7 +34,7 @@ approach. Now, I am confident I can fix things by hand as needed.
 
 ## Cat Knight
 
-<video src="cat-run.mp4" autoplay muted loop></video>
+<video src="cat-run.webm" autoplay muted loop></video>
 
 My first run/walk cycle! I'm proud of it. At first, I was resigned to using
 [Mixamo](https://www.mixamo.com/#/) because animation is too hard. Their library

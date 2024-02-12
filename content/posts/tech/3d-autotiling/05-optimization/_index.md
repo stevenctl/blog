@@ -1,5 +1,5 @@
 +++
-title = "Simpler Adjacency"
+title = "Optimizations"
 weight = 5
 +++
 

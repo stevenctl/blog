@@ -22,7 +22,7 @@ restriction in the GLTF format. The `blend` file should not be 90 megabytes.
 
 ### Animation
 
-<video src="anim.mp4" autoplay loop></video>
+<video src="anim.webm" autoplay loop></video>
 
 This was my first time doing a couple of things in Blender.
 
@@ -65,13 +65,10 @@ the train.
 ![pallete](pallete.png)
 
 To color, I used a simple palette texture. Entire faces are each assigned a
-color using this texture. Except for the "LCD" screen on the front of the train.
-While I referenced a Japanese subway train, I can't speak or read Japanese. My
-wife can read Chinese, and I learned from her that some borrowed characters
-exist in Japanese. The literal Chinese translation of 洞爷湖 says "Hole Lord
-Lake" should be Lake Tōya. We thought it would be funny if the train's
-destination were simply "Train Station" (火车站). Since I'm learning Mandarin, I
-will stick to Chinese characters.
+color using this texture. Except for the "LCD" screen on the front of the
+train. While I referenced a Japanese subway train, I can't speak or read
+Japanese. I do like the style of Kanji here, and I a decent amount of Chinese, 
+so I just put "火车站" (huo che zhan) meaning train station.
 
 ![emissive check](emissive.png)
 

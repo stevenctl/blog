@@ -28,14 +28,14 @@ shouldn't be offset so strongly if you want to have a character walk on it.
 
 ## Heightmap with Deep Parallax
 
-<video src="pom.mp4" autoplay muted loop></video>
+<video src="pom.webm" autoplay muted loop></video>
 
 There is a ton of detail in the floor and walls. Some bricks/stones occlude
 others. It's really awesome.
 
 ## Normal Map Only
 
-<video src="norm.mp4" autoplay muted loop></video>
+<video src="norm.webm" autoplay muted loop></video>
 
 If performance does become and issue, using the normal map textures seems to be
 good enough. This is using the simplest "swizzle" approach from Ben Golus's
@@ -48,7 +48,7 @@ but areas in negative directions start looking dark in a confusing way.
 
 ## Mesh Normals vs Normal Map
 
-<video src="normcompare.mp4" autoplay muted loop></video>
+<video src="normcompare.webm" autoplay muted loop></video>
 
 It's subtle, but I really think the normal texture adds a lot of depth and
 detail versus the flatness of the mesh normals.

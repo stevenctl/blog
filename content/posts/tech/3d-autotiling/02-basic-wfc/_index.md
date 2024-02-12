@@ -3,7 +3,7 @@ title: Basic Wave Function Collapse
 weight: 2
 ---
 
-<video src="generate.mp4" autoplay muted loop></video>
+<video src="generate.webm" autoplay muted loop></video>
 
 This 3D autotiling project started when I stumbled on [Martin Donald's Wave
 Function Collapse video](https://www.youtube.com/watch?v=2SuvO4Gi7uY). He
