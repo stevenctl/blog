@@ -1,0 +1,7 @@
+title = 'Dirt is Food'
+
+[author]
+name = "Steven Landow"
+links = [
+  { github = "https://github.com/stevenctl" }
+]

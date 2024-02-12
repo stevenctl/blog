@@ -1,0 +1,24 @@
+colorscheme = "avocado"
+logo="logo.png"
+
+mainSections=["posts", "tech"]
+enableSearch=false
+autoSwitchAppearance=false
+
+[homepage]
+layout="page"
+
+[article]
+showDate=false
+showReadingTime=false
+showWordCount=false
+showZenMode=false
+showAuthor=false
+showTableOfContents=true
+
+[list]
+# showHero=true
+# heroStyle="basic"
+groupByYear=false
+showCards=true
+cardView=true
