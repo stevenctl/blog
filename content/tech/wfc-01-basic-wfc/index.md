@@ -112,7 +112,7 @@ passing it to a compute shader.
 
 ### Cursor
 
-{{<video "step-1.webm">}}
+{{<video "01-marching-squares/step-1.webm">}}
 
 Pretty simple:
 
