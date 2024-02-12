@@ -3,6 +3,8 @@ title: "3D Autotiling: Expanding and Optimizing"
 type: tech
 ---
 
+{{<video "demo.webm">}}
+
 In the last post we were able to randomly generate "correct" looking 3D
 shapes. However, my goal was something that a user or game developer
 could create levels with. Let's look at our requirements:

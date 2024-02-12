@@ -3,7 +3,7 @@ title: "3D Autotiling: Basic WFC"
 type: tech
 ---
 
-{{<video "demo.webm">}}
+{{<video "02-basic-wfc/generate.webm">}}
 
 ## Introduction
 
@@ -203,8 +203,6 @@ four corners, it has 8. The hard part is building a tileset and lookup table
 that can support 2⁸ (256) possibilities.
 
 ## Basic Wave Function Collapse
-
-{{<video "02-basic-wfc/generate.webm">}}
 
 This 3D autotiling project started when I stumbled on [Martin Donald's Wave
 Function Collapse video](https://www.youtube.com/watch?v=2SuvO4Gi7uY). He
