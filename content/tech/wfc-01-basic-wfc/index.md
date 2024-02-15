@@ -222,7 +222,7 @@ use that definite value to narrow down the possible values of neighboring
 cells.
 
 {{< alert emoji="🤦" >}}
-  I used the word Collapse instead of Observe/Observation. Collapse is what
+  🤦 I used the word Collapse instead of Observe/Observation. Collapse is what
   happens due to observation and propagation. Oops.
 {{< /alert >}}
 
