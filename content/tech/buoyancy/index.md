@@ -47,8 +47,10 @@ computing the normals:
   on our 3D curve.
 * Leverage the cross product to find our normals.
 
-The last one is the easiest, in my opinion. The first paragraph of [the
-Wikipedia article for the cross
+If we were to try central differences, we end up getting issues near the peak of a step curve. 
+
+The last one is not only the most accurate, but also the easiest, in my
+opinion. The first paragraph of [the Wikipedia article for the cross
 product](https://en.wikipedia.org/wiki/Cross_product) mentions using them to
 calculate normal vectors.
 
@@ -144,8 +146,9 @@ var surface_pos = center.y
 This works extremely well for how simple it is, but we can take it further.
 Waves usually move things, right? How can we capture the force created by a
 wave? The amplitude of the wave should affect the strength of the push we give.
-It sounds like we need to look at the slope... otherwise known as the gradient
-which we can find using the partial derivatives of the wave.
+It sounds like we need to look at the slope. This means we need the derivative
+of our wave's function. 
+
 The current wave is defined by:
 
 {{<katex>}}$$w\left(x,y\right)=H\cdot e^{\sin\left(\sqrt{x^{2}+y^{2}}\right)+\sin\left(y\right)}$$
@@ -215,6 +218,36 @@ Because of the smaller step, we don't keep up with the wave. Because of the
 wave changing slope at a given point over time, the object can eventually end
 up changing direction. Instead of getting stuck at some local minimum after
 encountering one wave, our object looks like it's swaying back and forth.
+
+### Central Differences
+
+While this is very precise, doing the calculus to get that gradient takes an
+extra step of manual work. Each time the structure of our `_wave` function
+changes, that new function must be differentiated. Central differences is
+actually viable here, making analytic differentiation unneccessary at the cost
+of a few extra samples. It's viable here because we take a very small step
+rather than reaching to the far corners of the rectangle.
+
+```gdscript
+var step = .1 
+var r = _wave(center + Vector3.RIGHT * step)
+var l = _wave(center + Vector3.LEFT * step)
+var u = _wave(center + Vector3.BACK * step)
+var d = _wave(center + Vector3.FORWARD * step)
+var grad = Vector3(r - l, 0.0, u - d) / (2.0 * step)
+```
+
+Measuring the difference between this method and the last method for step sizes
+`.01`, `.1` and `1` were all oscillating between `0.01 and .1` using the
+following measurement:
+
+```
+(grad.normalized() - _wave_gradient(center).normalized()).length()
+```
+
+The magnitudes were massively different, with the difference in maginitude
+oscillating as well. This can be partially mitigated by using a higher
+`strength` or an extra division by `step`.
 
 
 ## Swimming
