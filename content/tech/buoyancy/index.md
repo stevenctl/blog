@@ -16,7 +16,7 @@ I discovered [Acerola's](https://youtube.com/@Acerola_t) amazing channel. In
 using plane fitting algorithms as a method for faking buoyancy. This inspired
 me to add a bit more fidelity to the rocking.
 
-## Simple "Plane Fitting"
+## Floating
 
 Plane fitting is a 3D form of [line
 fitting](https://en.wikipedia.org/wiki/Line_fitting); a process of finding the
@@ -32,43 +32,157 @@ stylized game. My requirements are minimal:
 * Orient the object to rest on the water's curve surface.
 * Put the object (near) the top of the water.
 
-### Orienting
-
 Starting with the orientation, we can look at this very similarly to looking
 for the normal of a heightmap. Our waves are just a vertex-displaced plane,
 where the y-displacement is defined by some function. There are a few options for
 computing the normals:
 
-#### Normal Calculation
+* Using small finite differences to approximate the normals at a single point.
+* Use central differences according to the size of the object to calculate the average normals.
+* Leverage the cross product to find our normals according to the size of the object.
 
-* Analytically differentiate the function and use the tangents to figure out
-  the normal. 
-* Use central differences, sampling different parts of the area we want to fit
-  on our 3D curve.
-* Leverage the cross product to find our normals.
+## Small Finite Differences
 
-If we were to try central differences, we end up getting issues near the peak of a step curve. 
+Finite differences is a method of estimating the slope of a function at a given
+point. It's the "rise over run" concept from elementary school. For our 3D
+curve, we'll check the height (y) at 3 points. One center point, one to the
+left and one forward. If we use a very small step, we can estimate a very local
+slope.
 
-The last one is not only the most accurate, but also the easiest, in my
-opinion. The first paragraph of [the Wikipedia article for the cross
-product](https://en.wikipedia.org/wiki/Cross_product) mentions using them to
-calculate normal vectors.
+{{<katex>}}$$\Delta x ~= \frac{w(x, z) - w(x + S, z)}{S}$$
+{{<katex>}}$$\Delta z ~= \frac{w(x, z) - w(x, z + S)}{S}$$
 
-We can start by defining a rectangle, centered at {{<katex>}}\\(P\\). Next, we
-take 4 samples of {{<katex>}}\\(f(x)\\) to get the corners
-[projected](https://www.desmos.com/3d/89a779a469) down onto the curve:
-{{<katex>}}\\(A\\) {{<katex>}}\\(B\\) {{<katex>}}\\(C\\) {{<katex>}}\\(D\\) and
-{{<katex>}}\\(P\\) projected onto the wave as {{<katex>}}\\(P_w\\).
+To get a normal from these two slopes, we can take the [cross product](https://en.wikipedia.org/wiki/Cross_product),
+an operation that gives a 3rd vector perpendicular to both of the given vectors:
+
+{{<katex>}}$$
+\vec n =
+\begin{bmatrix}
+    S \\
+    \Delta x \\
+    0
+\end{bmatrix}
+\times
+\begin{bmatrix}
+    0 \\
+    \Delta z \\
+    S
+\end{bmatrix}
+$$
+
+While this gives a very accurate approximation, it might be too accurate. When an
+object is longer than some concave part of the curve, this increases the likelyhood
+that we cut through the surface of the water.
+
+![finite_diffs](finite_diffs.png)
+
+## Object-Sized Finite Differences
+
+To mitigate this, we can take the size of our object into account
+when computing the differences. Supplying a width and length for
+our object we define a plane or rectangle parallel with the
+ground. The formulas just need a slight adjustment:
+
+{{<katex>}}$$\Delta x ~= \frac{w(x - 0.5W, z) - w(x + 0.5W, z)}{W}$$
+{{<katex>}}$$\Delta z ~= \frac{w(x, z - 0.5L) - w(x, z + 0.5L)}{L}$$
+
+{{<katex>}}$$
+\vec n =
+\begin{bmatrix}
+    W \\
+    \Delta x \\
+    0
+\end{bmatrix}
+\times
+\begin{bmatrix}
+    0 \\
+    \Delta z \\
+    L
+\end{bmatrix}
+$$
+
+Notice that there are now four samples, and they all go in
+different directions. This is a version of finite differences
+called central differences. From these samples, if we rotate our
+object then have a plane that _could_ fit on the wave but it sits
+underneath, tangent to the wave's curve. This is fine in convex
+scenarios, but it will lie underneath the curve in a concave area.
+The adjusted position is the mean of our samples.
+
+{{<katex>}} $$
+y' = \frac{w(x - 0.5W, z) + w(x + 0.5W, z) + w(x, z + .5L) + w(x, z - .5L)}{4}
+$$
+
+{{< gallery >}}
+    <img src="finite_diffs_width.png" class="grid-w50"/>
+    <img src="adjust_pos.png" class="grid-w50"/>
+{{< /gallery >}}
+
+In the case where our rectangle spans across a convex area of the curve, this will
+move us further down into the water. Using the higher of our adjusted value and the
+height at the center of the rectangle easily mitigates this.
+
+{{<katex>}} $$
+y'' = \max(y', w(x, y))
+$$
+
+{{< gallery >}}
+    <img src="convex_case.png" class="grid-w50"/>
+    <img src="convex_case_fix.png" class="grid-w50"/>
+{{< /gallery >}}
+
+All of this, in code, looks like this:
+
+```gdscript
+func fit_plane(plane: Node3D, size: Vector2, strength: float) -> Transform3D:
+    # take samples
+    var center = plane.global_position
+    var left = _wave(center + Vector3.LEFT * size.x / 2)
+    var right = _wave(center + Vector3.RIGHT * size.x / 2)
+    var front = _wave(center + Vector3.FORWARD * size.y / 2)
+    var back = _wave(center + Vector3.BACK * size.y / 2)
+
+    # compute the normal
+    var dx = right -left
+    var dz = back-front
+    var normal = -Vector3(size.x, dx, 0).cross(Vector3(0, dz, size.y)).normalized()
+
+    # place the object
+    var surface_point = center
+    var sample_mean = (left + right + front + back) / 4)
+    var surface_point.y = max(_wave(center.y), sample_mean) 
+
+    # create a transform
+	var rotation_axis = Vector3.UP.cross(normal).normalized()
+	var rotation_angle = Vector3.UP.angle_to(normal)
+	if rotation_axis.length_squared() < .1:
+		rotation_axis = Vector3.RIGHT
+	return Transform3D(Basis(rotation_axis.normalized(), rotation_angle), surface_point)
+```
+
+## Triangles in a Quad
+
+While the central differences approach works very well, it doesn't
+handle the subtle rotation across the shorter part of our
+rectangle. The samples all lie on the midpoints of the sides of
+the triangles, creating a diamond shape. Sampling at the corners
+will more accurately balance the object on the surface,
+[projecting](https://www.desmos.com/3d/89a779a469) the entire
+shape onto the curve.
 
 ![projection](projection.png)
 
-Next, we have to choose 3 points to form 2 vectors from. The cross of those two
-vectors will be the normal. We can get a pretty accurate normal by averaging
-the cross products of the sides of each of the triangles formed by
-{{<katex>}}\\(P_w\\) and the rectangle's corners. For gameplay purposes, we
-care much more about the tilt either forward or backward, so we'll use the
-average {{<katex>}}\\(\vec{AP_w} \times \vec{BP_w}\\) and
-{{<katex>}}\\(\vec{CP_w} \times \vec{DP_w}\\) as our normal.
+We can get a pretty accurate normal by averaging the cross
+products of the sides of each of the triangles formed by
+{{<katex>}}\\(P_w\\) and the rectangle's corners. Using just the
+front and back yields good enough results.
+
+{{<katex>}}$$
+\frac{\vec{AP_w} \times \vec{BP_w} + \vec{CP_w} \times \vec{DP_w}}
+{2}
+$$
+
+In code, this looks like:
 
 ```gdscript
 func fit_plane(center: Vector3, size: Vector2) -> Transform3D:
@@ -108,32 +222,45 @@ func fit_plane(center: Vector3, size: Vector2) -> Transform3D:
 The left side uses only `normal_b` and the right side uses `normal_f`. The center is the
 averaged normal. In my opinion, it looks much better.
 
-#### Allowing Rotated Objects
+## Fixing Rotation and Scale
 
-Our calculation is still inaccurate, especially if the plane we're using
-isn't a square. This is easy enough to fix by taking the source object's
-rotation into account when finding the corner points:
+Our calculation is still inaccurate, especially if the plane we're
+using isn't a square. We need to remember to take the parent
+transforms into account. This means multiplying our rectangle size
+by the object's scale.
+
+Anywhere we use the `size` of our rectangle, we'll also need to
+rotate. Also, if using the "avreage of triangles" method to compute the normal,
+the rotation must be undone.
 
 ```gdscript
 func fit_plane(plane: Node3D, size: Vector2) -> Transform3D:
+	size *= Math.vec2(plane.scale)
+
+    # samples for "average of triangles"
     var front_r = center + Vector3(size.x, 0, size.y).rotated(Vector3.UP, plane.global_rotation.y)
     var front_l = center + Vector3(-size.x, 0, size.y).rotated(Vector3.UP, plane.global_rotation.y)
     var back_r = center + Vector3(size.x, 0, -size.y).rotated(Vector3.UP, plane.global_rotation.y)
     var back_l = center + Vector3(-size.x, 0, -size.y).rotated(Vector3.UP, plane.global_rotation.y)
 
-    #...
+    # samples for "object sized finite differences"
+	var left = _wave(center + (Vector3.LEFT * size.x / 2).rotated(Vector3.UP, plane.global_rotation.y))
+	var right = _wave(center + (Vector3.RIGHT * size.x / 2).rotated(Vector3.UP, plane.global_rotation.y))
+	var front = _wave(center + (Vector3.FORWARD * size.y / 2).rotated(Vector3.UP, plane.global_rotation.y))
+	var back = _wave(center + (Vector3.BACK * size.y / 2).rotated(Vector3.UP, plane.global_rotation.y))
 
-	# rotation based on average of cross products
-	# we now need to convert back into local space by undoing the objects rotation
-	var normal = ((normal_b + normal_f) / 2.0).rotated(Vector3.UP, -plane.global_rotation.y);
+    # only needed for the triangles approach of calculating normal 
+	var normal = ((normal_b + normal_f) / 2.0).rotated(Vector3.UP, -plane.global_rotation.y).normalized()
+
 ```
+
 
 {{< gallery >}}
     <img src="broken_rot.png" class="grid-w50"/>
     <img src="fixed_rot.png" class="grid-w50"/>
 {{< /gallery >}}
 
-### Positioning
+## Positioning and Movement
 
 Now that our plane faces the right direction, we want to put it at the surface
 of the water. We could choose to use the point on the curve under the center of
@@ -177,7 +304,7 @@ func _wave_gradient(p: Vector3) -> Vector3:
 	var w = pow(2.1231, sin(d) + sin((uv.y + 1.0))) * height
 	var dx = (uv.x * w * cos(d)) / d
 	var dy = w * ((uv.y * cos(d)) / d + cos(uv.y + 1))
-	return Vector3(dx, 0, dy)
+	return Vector3(dx, 0, dy).normalized()
 
 func fit_plane(center: Vector3, size: Vector2):
     # ...
@@ -219,36 +346,21 @@ wave changing slope at a given point over time, the object can eventually end
 up changing direction. Instead of getting stuck at some local minimum after
 encountering one wave, our object looks like it's swaying back and forth.
 
-### Central Differences
+## Central Differences (Again)
 
-While this is very precise, doing the calculus to get that gradient takes an
-extra step of manual work. Each time the structure of our `_wave` function
-changes, that new function must be differentiated. Central differences is
-actually viable here, making analytic differentiation unneccessary at the cost
-of a few extra samples. It's viable here because we take a very small step
-rather than reaching to the far corners of the rectangle.
+While this is very precise, doing the calculus to get that
+gradient takes an extra step of manual work. Each time the
+structure of our `_wave` function changes, that new function must
+be differentiated. We can simply re-use the finite differences
+method from earlier here. The analytic approach could still be
+useful for validation. 
+
+The only modification is how we construct the vector to get the
+gradient (aka slope) instead of the normal:
 
 ```gdscript
-var step = .1 
-var r = _wave(center + Vector3.RIGHT * step)
-var l = _wave(center + Vector3.LEFT * step)
-var u = _wave(center + Vector3.BACK * step)
-var d = _wave(center + Vector3.FORWARD * step)
-var grad = Vector3(r - l, 0.0, u - d) / (2.0 * step)
+var grad = Vector3(dx, 0.0, dz) / step
 ```
-
-Measuring the difference between this method and the last method for step sizes
-`.01`, `.1` and `1` were all oscillating between `0.01 and .1` using the
-following measurement:
-
-```
-(grad.normalized() - _wave_gradient(center).normalized()).length()
-```
-
-The magnitudes were massively different, with the difference in maginitude
-oscillating as well. This can be partially mitigated by using a higher
-`strength` or an extra division by `step`.
-
 
 ## Swimming
 
