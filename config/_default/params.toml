@@ -6,7 +6,9 @@ enableSearch=false
 autoSwitchAppearance=false
 
 [homepage]
-layout="page"
+layout="custom"
+# layout="page"
+homepageImage="train.png"
 
 [article]
 showDate=false

@@ -3,25 +3,17 @@ title: Triplanar with Deep Parallax in Godot
 type: tech
 ---
 
-A handful of people have asked if Godot can support height mapping in
-combination with triplanar sampling. Height mapping is a very cool technique
-that adds a ton of detail without extra geometry. While modern game engines and
-hardware can handle an insane number of triangles, my workflow for creating
-models that tile perfectly cannot.
+I don't think this is going to be that useful in most games. Triplanar mapping
+is already expensive, and multiplying that by the samples for paralax occlusion
+mapping is probably a bad idea.
 
-The reason I'm using triplanar texture coordinates is that I rotate and flip
-tiles around. This could introduce seams unless I do something clever like
-flipping and rotating UVs around some point. I'm also pretty sure that even if I
-do that, it means I can't scale the UVs arbitrarily.
+In my current WFC prototypes, I'm re-using models and rotating them. At some
+point I'll need to handle also transforming the UVs based on the rotation of
+the tiles' models, but for now triplanar can help me with look development.
 
-While in the [feature
-request](https://github.com/godotengine/godot-proposals/issues/5530) one of the
-Godot maintainers warns that doing a texture fetch in a loop is already slow,
-and with a triplanar shader you're multiplying the total number by 3.
-
-I decided to ignore that advice and see how bad it performed. After taking their
-suggestion to reduce the number of iterations because it won't be noticeable in
-practice, it didn't cause any FPS drops on my beefy gaming PC.
+I want to use heightmaps to add details without extra geometry. While modern
+game engines and hardware can handle an insane number of triangles, my workflow
+for creating models that tile perfectly cannot.
 
 The effect is turned up a bit to make it extra apparent int he sample. The floor
 shouldn't be offset so strongly if you want to have a character walk on it.
@@ -46,25 +38,18 @@ tutorial, and I think the results are just fine.
 Without this fix, you get very wrong normals. It's subtle in this sample scene
 but areas in negative directions start looking dark in a confusing way.
 
-## Mesh Normals vs Normal Map
-
-{{<video "normcompare.webm">}}
-
-It's subtle, but I really think the normal texture adds a lot of depth and
-detail versus the flatness of the mesh normals.
-
 ## The Shader
 
 Here's the code for those who are interested. It's mostly me gluing code from
 various tutorials together. Also there's some unnessary conditionals I have for
 toggling the ability to use two sets of textures for the walls and floor. In
-reality there should be a separate shader for each, or some `IFDEF` preprocessor
-stuff instead of a runtime check.
+reality there should be a separate shader for each, or some preprocessor stuff
+instead of a runtime check.
 
 ```c
 shader_type spatial;
 
-uniform float blendSharpness; 
+uniform float blendSharpness;
 
 uniform sampler2D textureMap : source_color;
 uniform sampler2D normalMap : hint_normal;
@@ -93,7 +78,7 @@ void vertex() {
 
     // Transform the vertex normal to world space
     worldNormal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
-    
+
 }
 
 // TODO conditionals...
@@ -131,7 +116,7 @@ vec4 triplanarSample(vec2 uvX, vec2 uvY, vec2 uvZ, vec3 blend, float yDot) {
 // The simplest appoach suggested in the goat's article:
 // https://bgolus.medium.com/normal-mapping-for-a-triplanar-shader-10bf39dca05a
 vec3 triplanarNormal(float yDot, vec2 uvX, vec2 uvY, vec2 uvZ, vec3 blend) {
-	
+
     // Tangent space normal maps
     vec3 tnormalX = texture(normalMap, uvX).rgb;
     vec3 tnormalY = sampleNormal(yDot, uvY).rgb;
@@ -157,7 +142,7 @@ vec3 triplanarNormal(float yDot, vec2 uvX, vec2 uvY, vec2 uvZ, vec3 blend) {
 }
 
 // Adapted from the tutorial. Changed to accept a viewDir which represents each plane.
-// https://www.youtube.com/watch?v=LrnE5f3h2SU 
+// https://www.youtube.com/watch?v=LrnE5f3h2SU
 vec2 pomUV(float yDot, vec2 m_base_uv, vec3 viewDir) {
     float viewDot = dot(viewDir, vec3(1, 0, 0));
     float minLayers = float(min(heightMinLayers, heightMaxLayers));
@@ -199,7 +184,7 @@ void fragment() {
         smoothstep(blendSharpness, 1.0, abs(yDot)),
         smoothstep(blendSharpness, 1.0, abs(dot(worldNormal, vec3(0.0, 0.0, 1.0))))
     );
-    
+
     // view dir will be swizzled to match coordinates
     vec3 viewDir = normalize(CAMERA_POSITION_WORLD - worldPos);
 
@@ -216,7 +201,7 @@ void fragment() {
 
     // sample and output
     ALBEDO = triplanarSample(texCoordX, texCoordY, texCoordZ, blend, yDot).rgb;
-    NORMAL = mix(worldNormal, triplanarNormal(yDot, texCoordX, texCoordY, texCoordZ, blend), normalMapStrength); 
+    NORMAL = mix(worldNormal, triplanarNormal(yDot, texCoordX, texCoordY, texCoordZ, blend), normalMapStrength);
     NORMAL = normalize((VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 ```
