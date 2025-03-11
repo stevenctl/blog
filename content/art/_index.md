@@ -1,4 +1,4 @@
 ---
-title: Art
+title: Doodles
 menu: main
 ---

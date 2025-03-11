@@ -1,5 +1,5 @@
 ---
-title: Techincal Posts
+title: Posts
 menu: main
 ---
 

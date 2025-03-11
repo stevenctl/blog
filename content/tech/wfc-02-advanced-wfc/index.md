@@ -1,6 +1,7 @@
 ---
 title: "3D Autotiling: Expanding and Optimizing"
 type: tech
+weight: 5
 ---
 
 {{<video "demo.webm">}}
@@ -13,13 +14,13 @@ could create levels with. Let's look at our requirements:
   describes](https://www.boristhebrave.com/2021/06/06/driven-wavefunctioncollapse/)
   calls this "Driven WFC".
 * We need a lot of tiles. That would take a lot of time to model for a game developer.
-  This isn't totally avoidable, but we can optimize our workflow. 
+  This isn't totally avoidable, but we can optimize our workflow.
 * If the user is going to interact with this, the algorithm for solving the generation
   needs to be fast. Our naive implementation needs a major upgrade.
 
 ## Driving WFC
 
-### Initial Constraint 
+### Initial Constraint
 
 Our method of "driving" WFC will be specifying which cells aren't empty
 as an initial contraint.
@@ -46,11 +47,11 @@ This is the result:
 ### Ambiguous Cases
 
 The example above _should_ be a plain rectangle. The problem is our constraint
-says "every cell must have a non-empty tile". That is satisfied. 
+says "every cell must have a non-empty tile". That is satisfied.
 
 #### Special "empty" Tile
 
-We could expand the constraint to say "all our tiles must be connected on a non-empty face". 
+We could expand the constraint to say "all our tiles must be connected on a non-empty face".
 
 ```python
 {
@@ -115,7 +116,7 @@ constrain it to all the tiles with that volume:
 corner_counts = {}
 for coord in crossgrid:
     for coord in expand_coord(coord):
-        if coord not in corner_counts: 
+        if coord not in corner_counts:
             corner_counts[coord] = 0
         corner_counts[coord] += 1
 
@@ -223,7 +224,7 @@ this image to show tiles for a dual-grid.
 
 ![oskar's beautiful dual tiles diagram](dual-grid.jpeg)
 
-I tried to classify the square cases. 
+I tried to classify the square cases.
 
 * Empty
 * Corner
@@ -233,7 +234,7 @@ I tried to classify the square cases.
 * Full
 
 Those are the cases I want to end up with at the end. The combinatorial
-explosion into 3D is big. Let's cut those into quadrants to make the _dual-dual_ tiles. 
+explosion into 3D is big. Let's cut those into quadrants to make the _dual-dual_ tiles.
 We end up eliminating the Diagonal case. Only four models are needed to start:
 
 ![basic tiles](basic-4.png)
@@ -274,7 +275,7 @@ based on which neighboring octants are also filled. The implementation is
 [here](https://gist.github.com/stevenctl/3492292c6461c8235e22f858c22ce6b8).
 I wrote it on a long flight and jetlag affected the readability. The rules are:
 
-* If 4 octants are filled in the same "plane", this is either flat or a "lip". 
+* If 4 octants are filled in the same "plane", this is either flat or a "lip".
 * If 3 adjacent octants are filled, this is a 3-way bend.
 * If 2 adjacent octants are filled, this is a 2-way bend.
 * If 1 adjacent octant is filled, this is an edge.
@@ -328,12 +329,12 @@ The image approach _enables_ that sort of artistic liberty.
 
 Base64 encoding and decoding images could work. Instead I decided to over-engineer this
 a bit. I don't want to rely on using any library's `Image` abstraction. My images
-don't need much resolution at all. 
+don't need much resolution at all.
 
 The base tiles could be captured with a 2x2 image. I landed on using 7x7
 monochrome images encoded into 64-bit integers. 2x2 isn't enough if we create
 detailed tiles down the road. An 8x8 image would use 64 bits,
-and we want leftovers. 
+and we want leftovers.
 
 Using some leftover bits, we can store information like whether the image is the
 flipped version of another image. Now when we compare a horizontal socket, we
@@ -355,7 +356,7 @@ The advantages we get:
 
 Those last two are very useful properties. With the old approach, the first
 hash we saw would get a name, and the transformations would be derived from that name.
-With this approach, the "canonical" untransformed image can be determined by performing 
+With this approach, the "canonical" untransformed image can be determined by performing
 the transformations to the image and sorting by the integer value.
 
 
@@ -365,7 +366,7 @@ the transformations to the image and sorting by the integer value.
 
 Converting from 2x2 to an arbitrary size isn't too hard. Just loop through and
 fill up the corners. For odd numbered resolutions, like 7, a corner would be
-3x3. There is additional logic to fill these gaps where it makes sense. 
+3x3. There is additional logic to fill these gaps where it makes sense.
 
 ```python
 def gen_sock(cube_id: int, face_name: str, seen_socks: Sockets, bitmap_size=7) -> int:
@@ -400,7 +401,7 @@ The whole reason we're using WFC and not Marching Cubes is to allow
 for interesting shapes to emerge under certain conditions. We can texture
 some cubes parented to manually modeled tiles that extend our base set of 53.
 The sockets for the base set are simple and easy to reason about. We can be a
-bit clever designing socket images for our custom tiles. 
+bit clever designing socket images for our custom tiles.
 
 Luckily the Blender Python API (`bpy`) gives us a representation that is compatible
 with NumPy. We can keep our authoring workflow fully inside of Blender.
@@ -427,7 +428,7 @@ At the deepest part of this nested loop/recursive iteration we have an expensive
 computation:
 
 ```python
-allowed_sockets = [allowed_socket(other[opposing_face]) for other in other_cell.possibilities] 
+allowed_sockets = [allowed_socket(other[opposing_face]) for other in other_cell.possibilities]
 self.possibilities = [p for p in self.possibilities if
                       len(p.sockets_for_face(my_face).intersection(allowed_sockets)) > 0]
 ```
@@ -441,14 +442,14 @@ an `id` which is its index in the initial list.
 ```python
 adjacency = []
 for proto in prototypes:
-    allowed = {} 
+    allowed = {}
     for face in faces:
-        allowed[face] = allowed_for_face(proto, face, prototypes)    
+        allowed[face] = allowed_for_face(proto, face, prototypes)
 
 def allowed_for_face(proto, face, prototypes):
     set([
-        i 
-        for i, other in prootypes 
+        i
+        for i, other in prootypes
         if compatible(proto, face, other)
     ])
 ```
@@ -468,13 +469,13 @@ self.possibilities = allowed_protos
 Bit representations of cubes and images got me thinking: we don't have a crazy number of protos.
 What if the `possibilities` list was just a set. Each bit represents one prototype. In Python, a number
 can have more than 64 bits. In other languages, you'll need to roll an abstraction over a list of integers.
-We have 256 base tiles, plus some manually created ones. Let's say our max tilset size is 512. 
+We have 256 base tiles, plus some manually created ones. Let's say our max tilset size is 512.
 
 If `possibilities` is now something we can use the binary `&` operator on we get some micro-optimzations:
 
 * We don't necessarily need the heap.
 * Single instruction intersections.
-* Maybe it's cache efficient? I don't do this kind of optimization often. 
+* Maybe it's cache efficient? I don't do this kind of optimization often.
 
 This could be called a micro-optimzation, but for large tilesets it is probably
 worth it. Instead of doing `O(N)` union of hash tables, we can do `O(N /

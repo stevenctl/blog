@@ -1,6 +1,7 @@
 ---
 title: "3D Autotiling: Basic WFC"
 type: tech
+weight: 4
 ---
 
 {{<video "02-basic-wfc/generate.webm">}}

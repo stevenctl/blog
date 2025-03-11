@@ -1,6 +1,7 @@
 ---
 title: Faking Buoyancy
 type: tech
+weight: 2
 ---
 
 {{<video "demo.webm" >}}
