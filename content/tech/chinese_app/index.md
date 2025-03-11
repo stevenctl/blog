@@ -104,7 +104,7 @@ And I still have a lot to do:
 ### Architecture
 
 
-<img src="pics/arch.png" alt="arch diagram" style="height: 512px;">
+<img src="pics/arch.png" alt="arch diagram">
 
 The app is built on Flutter, because it's easy to use, has a good librry of pre-built
 components, and I am not writing the app a second time to support iOS.
