@@ -116,3 +116,12 @@ for splatmap generation as well. Using these primitive shapes is pretty
 unwieldy , so in the future I'd like to be able to use the `Path3D` node to
 create paths and roads on the splatmap, as well as a free form drawing brush.
 Maybe noise texture overlays as well with masking.
+
+
+## Optimization
+
+Currently, this recalculates the terrain using every input shape, every time.
+There is a simple optimization that would cache the result of every shape but
+the actively selected one and then just re-apply that one shape. I haven't done
+measurements to see whether this is worth it. If this editor was being shipped
+in game, rather than being just an editor tool, it needs some tuning.

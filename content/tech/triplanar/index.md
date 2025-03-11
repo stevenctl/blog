@@ -3,40 +3,35 @@ title: Triplanar with Deep Parallax in Godot
 type: tech
 ---
 
-I don't think this is going to be that useful in most games. Triplanar mapping
-is already expensive, and multiplying that by the samples for paralax occlusion
-mapping is probably a bad idea.
+Triplanar mapping is already expensive, and multiplying that by the samples for
+paralax occlusion mapping is probably a bad idea. It was fun to implement this
+anyway, even if I don't use it in a game.
 
 In my current WFC prototypes, I'm re-using models and rotating them. At some
 point I'll need to handle also transforming the UVs based on the rotation of
-the tiles' models, but for now triplanar can help me with look development.
+the tiles' models, but for now triplanar mapping is a quick way to get an idea
+of how things might look.
 
-I want to use heightmaps to add details without extra geometry. While modern
-game engines and hardware can handle an insane number of triangles, my workflow
-for creating models that tile perfectly cannot.
+I want to use heightmaps to add details without extra geometry. The concern is
+mostly on my workflow, not on performance. I'm simply too lazy to model that into
+my modules in a tileable way.
 
 The effect is turned up a bit to make it extra apparent int he sample. The floor
-shouldn't be offset so strongly if you want to have a character walk on it.
+shouldn't be offset so strongly if you want to have a character walk on it without
+them appearing to levitate.
 
 ## Heightmap with Deep Parallax
 
 {{<video "pom.webm">}}
 
-There is a ton of detail in the floor and walls. Some bricks/stones occlude
-others. It's really awesome.
-
 ## Normal Map Only
 
 {{<video "norm.webm">}}
 
-If performance does become and issue, using the normal map textures seems to be
-good enough. This is using the simplest "swizzle" approach from Ben Golus's
+Using Ben Golus's basic "swizzle" from his
 [Normal Mapping for a Triplanar
 Shader](https://bgolus.medium.com/normal-mapping-for-a-triplanar-shader-10bf39dca05a)
 tutorial, and I think the results are just fine.
-
-Without this fix, you get very wrong normals. It's subtle in this sample scene
-but areas in negative directions start looking dark in a confusing way.
 
 ## The Shader
 
