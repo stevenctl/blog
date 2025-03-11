@@ -101,6 +101,35 @@ And I still have a lot to do:
 * A floating widget that displays over other apps to look up words
   the way you would in my reader mode.
 
+### Architecture
+
+
+<img src="pics/arch.png" alt="arch diagram" style="height: 512px;">
+
+The app is built on Flutter, because it's easy to use, has a good librry of pre-built
+components, and I am not writing the app a second time to support iOS.
+
+Local first is very important to me. Bad internet, or no internet shouldn't get in the way.
+In fact, connecting to Supabase for backing up your progress is completely optional. Everything
+is written around the local SQLite database which syncs data to and from Postgres (Supabase) in
+the background.
+
+Supabase is a nice managed Postgres, but it also provides an easy way to spin up local
+development databases with it's CLI. It also gives us a nice Dart API with support for
+doing 3rd party OAuth (google) or E-Mail/Password auth, all of that tying into Postgres
+Row-Level Security (RLS). There is a generic syncer that just uses a version and timestamp
+column to choose which side will overwrite what, and options for special merge rules. Other than
+that, the only difference between local and remote schemas are a user_id column in Postgres.
+
+Finally, since I'm reaching out to Azure for TTS and OpenAI (maybe I'll switch
+to Deepseek since it's Chinese?) I want to keep those off of the user's phone,
+so we have a little Go middle man that can maybe take on more responsibilty if
+I find the need later.
+
+Again, keeping with the local-first priority, there are some on-device ML models
+that handle advanced word-to-dictionary mapping usecases. Models are trained with torch
+but then converted to ONNX because that's the only thing I found that worked without
+having to write my own wrappers around native iOS/Android/Linux to do inference.
 
 ### TTS
 
