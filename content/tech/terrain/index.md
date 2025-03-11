@@ -1,7 +1,7 @@
 ---
 title: Non-Destructive Terrain Editor
 type: tech
-weight: 3
+weight: 930
 ---
 
 I am not a good artist. One of the reason 3D is a bit more

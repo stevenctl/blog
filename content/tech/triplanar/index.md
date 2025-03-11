@@ -1,7 +1,7 @@
 ---
 title: Triplanar with Deep Parallax in Godot
 type: tech
-weight: 1
+weight: 950
 ---
 
 Triplanar mapping is already expensive, and multiplying that by the samples for

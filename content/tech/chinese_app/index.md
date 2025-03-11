@@ -1,8 +1,7 @@
-
 ---
 title: "Building my own app for learning Chinese"
 type: tech
-weight: 6
+weight: 900
 ---
 
 [Just want to see the app?](#the-app)</code>

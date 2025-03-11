@@ -1,7 +1,7 @@
 ---
 title: "3D Autotiling: Expanding and Optimizing"
 type: tech
-weight: 5
+weight: 905
 ---
 
 {{<video "demo.webm">}}
