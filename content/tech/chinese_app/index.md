@@ -10,7 +10,7 @@ weight: 900
 
 I've been studying mandarin chinese for a few years now, using a few pretty
 great apps. I started out just learning ultra basic phrases from my spouse who
-bought me pimsleur to listen to in the car which was my foundation. The next
+bought me Pimsleur to listen to in the car which was my foundation. The next
 app I used, which got me all the way through the basics was [Hello
 Chinese](https://www.hellochinese.cc/), easily the best app I've used for
 learning. Besides gamified lessons and reviews, it included a reader with a
@@ -38,10 +38,10 @@ probably mostly true. Your brain should soak up patterns over time, get used
 to recognizing words without thinking about it, and begin to naturally replicate
 pronunciation. I _don't_ agree with those who claim CI is the _only_ tool you need
 to reach fluency. Especially when the target language is so completely different
-than your own native langague.
+than your own native language.
 
 I can still remember the feeling of "Holy shit I understand exactly what he
-said!" the second time I tried listinging to [Tea Time Chinese
+said!" the second time I tried listening to [Tea Time Chinese
 (茶歇中文)](https://teatimechinese.com/). My favorite CI resources for chinese are:
 
 * [Tea Time Chinese (茶歇中文)](https://teatimechinese.com/).
@@ -54,7 +54,7 @@ reasonable price for tutors from all over the world for different languages.
 Every teacher has a different approach, and I think I am very lucky to have
 found a teacher who just had conversations with me, sometimes with a topic in
 mind, sometimes just letting the conversation naturally flow. He would
-strategically introduce new words, when I was tyring to say something too
+strategically introduce new words. When I was trying to say something too
 complex, he'd encourage me to use the simpler language that I'm already
 comfortable with to express myself, and use simple language to teach words
 without using any English!
@@ -70,7 +70,7 @@ English when introducing new words.
 Doing a couple hours a week of classes and using bit of Chinese at home with my
 spouse is _not going to get me from intermediate to fluent in a reasonable
 timeframe. Another tool besides CI that many language learning enthusiasts swear by
-is a Spaced Repitition System or SRS. There are apps for this like [Anki](https://apps.ankiweb.net/)
+is a Spaced Repetition System or SRS. There are apps for this like [Anki](https://apps.ankiweb.net/)
 or you could simply systematically organize physical flashcards. The basic idea is
 that you review whatever you're trying to memorize daily. When you are correct on the first try,
 you advance that item one level. Items in a higher level are reviewed less frequently until you
@@ -95,7 +95,7 @@ What I have built so far has a few key features:
 * TTS all over the place.
 
 And I still have a lot to do:
-* A library of CI content to feed into the reader
+* A library of Comprehensible Input content to feed into the reader
 * Camera based OCR to look up words you encounter IRL
 * Component/radical search for the dictionary
 * A floating widget that displays over other apps to look up words
@@ -115,7 +115,7 @@ is written around the local SQLite database which syncs data to and from Postgre
 the background.
 
 Supabase is a nice managed Postgres, but it also provides an easy way to spin up local
-development databases with it's CLI. It also gives us a nice Dart API with support for
+development databases with its CLI. It also gives us a nice Dart API with support for
 doing 3rd party OAuth (google) or E-Mail/Password auth, all of that tying into Postgres
 Row-Level Security (RLS). There is a generic syncer that just uses a version and timestamp
 column to choose which side will overwrite what, and options for special merge rules. Other than
@@ -123,7 +123,7 @@ that, the only difference between local and remote schemas are a user_id column 
 
 Finally, since I'm reaching out to Azure for TTS and OpenAI (maybe I'll switch
 to Deepseek since it's Chinese?) I want to keep those off of the user's phone,
-so we have a little Go middle man that can maybe take on more responsibilty if
+so we have a little Go middle man that can maybe take on more responsibility if
 I find the need later.
 
 Again, keeping with the local-first priority, there are some on-device ML models
@@ -191,12 +191,22 @@ to tell what word and definition in the dictionary corresponds to a character
 in some text. There is so much ambiguity, and rule-based systems can only do
 an okay job dealing with it. Some examples:
 
-> 我的学长流血了很长时间.
+> 我的学长留学了在北京外国语大学很长时间.
 
 It can be tricky to figure out whether 长 is 'cháng' or 'zhǎng'.
 The first instance is easy. 学长 is a word in the dictionary, so
 we can deal with that by just looking for the longest sequence that
 exists in the dictionary.
+
+"北京外国语大学" is also tricky; should we group 外国 (foreign) or 国语 (the
+national language, Mandarin). In this case, it should either be "外国",
+"外国语" (foreign language) or even "北京外国语大学" since that's the name of
+the school. Since 外国 actually exists in the dictionary database, we should
+pick that, and then the mappings for 北京， 语，and 大学 still make sense on
+their own.
+
+Another example, with 的话 a super common pair of characters that only
+_sometimes_ should be separated:
 
 > 如果你喜欢周杰伦的话，你应该听妈妈的话。
 
@@ -222,7 +232,7 @@ final bScore = tokenScores[i][0];
 final iScore = tokenScores[i][1];
 
 // do some funny math to figure out _how_ confident the model is
-// this makes the numbers a bit more interperetable for tuning threshold
+// this makes the numbers a bit more interpretable for tuning threshold
 final pB = exp(bScore / temperature) /
     (exp(bScore / temperature) + exp(iScore / temperature));
 final pI = exp(iScore / temperature) /
@@ -293,7 +303,7 @@ By <a href="//commons.wikimedia.org/wiki/User:Zirguezi" title="User:Zirguezi">Zi
 
 The SRS itself is a pretty basic [Leitner
 system](https://en.wikipedia.org/wiki/Leitner_system). There's actually very
-little interesting techincal stuff going on here. The interface on top of it is
+little interesting technical stuff going on here. The interface on top of it is
 what I find more useful than others' systems; but it's still very, very simple.
 
 {{< gallery >}}
