@@ -6,19 +6,21 @@ weight: 920
 
 {{<video "demo.webm" >}}
 
-For the intro to a game I (perodically) work on, I decided to put the player on
-a pirate ship. Scrolling textures on a big plane looked pretty boring. To make
-things a bit angrier I decided to add waves.
+During the intro to a game I (perodically) work on, the player starts on a
+pirate ship. Realistic water doesn't fit the style, and scroling textures on a
+big plane looked pretty boring. To make things a bit angrier I needed intense
+waves, and I needed those waved to actually affect the world.
 
 ## Waves
 
-The visual component is the most common technique for basic waves: displacing
-the height of each vertex on a subdivided plane.
+To keep it simple, we'll just do a procedural heightmap; i.e. set the vertical coorinate to
+be a function of the horizontal position and time.
 
-Inspired by [sum of sines](https://developer.nvidia.com/gpugems/gpugems/part-i-natural-effects/chapter-1-effective-water-simulation-physical-models#:~:text=The%20sum%20of%20sines%20gives,to%20the%20continuous%20water%20surface.)
-which can make semi-realistic ocean shaders, I'm taking the basic idea of adding two waves
-with different frequencies to break up the repetitiveness. The result is good enough for this
-cartoon style.
+[Sum of
+sines](https://developer.nvidia.com/gpugems/gpugems/part-i-natural-effects/chapter-1-effective-water-simulation-physical-models#:~:text=The%20sum%20of%20sines%20gives,to%20the%20continuous%20water%20surface.)
+can add some semi-realistic texture to the surface of the water. I'm not doing
+that, but I am taking the basic idea of adding two waves with different
+frequencies to break up the repetitiveness.
 
 
 ```glsl
@@ -38,16 +40,20 @@ void vertex() {
 
 ## Floating
 
-There are two components to making objects float on top of our waves:
+The fun part is making the waves interactive. There are two components to
+making objects float on top of our waves:
 
 * Position: move the object up and down so it sits on top of the water.
 * Rotation: orient the object according to the slope of the waves.
 
 We generally want some of the object to sit beneath the surface of the water.
-Instead of doing anything fancy like using volume to calculate actual buoyancy,
-we can just define our own y-offset from the model's postition, and a 2D size
-of the "buoyancy-plane". In Godot, `CSGBox3D` conveiently lets us visualize and edit
-these properties.
+There are more realistic buoyancy simulations that figure out the displacement according
+to the amount of a volume that sits beneath the surface. The complexity and noise that
+comes with an accurate solution doesn't fit the style, so instead we're going to fit a plane to
+the waves surface.
+
+It's easy to adjust the plane within the Godot editor, without doing anything
+custom, by defining a CSGBox3D that is thrown away at runtime.
 
 ![CSGBox3D as a buoyancy plane](boundingplane.png)
 
@@ -85,27 +91,26 @@ because I assume the shape of my rectangle is longer on that axis.
 
 ```gdscript
 # find the corners (the rotation puts us into global space, needed by _wave)
-var front_r = center + (Vector3(size.x, 0, size.y) / 2.0).rotated(Vector3.UP, plane.global_rotation.y)
-var front_l = center + (Vector3(-size.x, 0, size.y) / 2.0).rotated(Vector3.UP, plane.global_rotation.y)
-var back_r = center + (Vector3(size.x, 0, -size.y) / 2.0).rotated(Vector3.UP, plane.global_rotation.y)
-var back_l = center + (Vector3(-size.x, 0, -size.y) / 2.0).rotated(Vector3.UP, plane.global_rotation.y)
+# Define corners in local space
+var local_corners = [
+    Vector3( half_x, 0,  half_z), Vector3(-half_x, 0,  half_z), # front
+    Vector3(-half_x, 0, -half_z), Vector3( half_x, 0, -half_z), # back
+]
 
-# project the points onto the wave
-front_r.y = _wave(front_r)
-front_l.y = _wave(front_l)
-back_l.y = _wave(back_l)
-back_r.y = _wave(back_r)
+# Rotate and add to center (global space), then apply wave
+for i in range(local_corners.size()):
+    local_corners[i] = center + local_corners[i].rotated(Vector3.UP, rot_y)
+    local_corners[i].y = _wave(local_corners[i])
+
+# Also project center on the wave
 center.y = _wave(center)
 
-# average normals from the triangles
-var normal_f = (front_l - center).cross(front_r - center).normalized();
-var normal_b = (back_r - center).cross(back_l - center).normalized();
+# Compute the two triangle normals
+var normal_f = (local_corners[1] - center).cross(local_corners[0] - center).normalized()
+var normal_b = (local_corners[3] - center).cross(local_corners[2] - center).normalized()
 
-
-# rotation based on avg of cross products of triangles in the plane
-var normal = ((normal_b + normal_f) / 2.0)
-# undo the global space transformation
-normal = normal.rotated(Vector3.UP, -plane.global_rotation.y).normalized()
+# Average the normals, then undo the global space rotation
+var normal = ((normal_f + normal_b) * 0.5).rotated(Vector3.UP, -rot_y).normalized()
 ```
 
 {{< gallery >}}
@@ -117,23 +122,27 @@ normal = normal.rotated(Vector3.UP, -plane.global_rotation.y).normalized()
 From left to right are examples using the back normal, the averaged normals and
 the front normal on top of a sharp peak.
 
+To be scientific about it, I plotted a "smoothness" field, the gradient of the computed
+normal-field. Not very surprising, sampling a bigger area results in smoother changes.
+The cross-product approach had the lowest variance, and spreads the variance around a larger
+space.
+
+![smoothness graph](smooth_field.png)
+
 ### Position
 
-Assuming our buoyancy-plane is already offset from the model, and we use
-`position.y = wave(position.xy)`, concave parts of the curve will have the boat
-dip into the water on each side.
+A naive `position.y = wave(position.xy)` means that at concave parts of the curve,
+our plane will undernath the surface.
 
 {{< gallery >}}
     <img src="finite_diffs_width.png" class="grid-w50"/>
     <img src="adjust_pos.png" class="grid-w50"/>
 {{< /gallery >}}
 
-We should re-frame our goal to be none of the or extremes of our bounding shape
-dip under the water. If we instead use the mean of our samples, we fix the concave case but now we'll
-end up submerged in convex areas.
-
-To get the best of both, we just take the `max` of the center sample or the edge
-samples ([desmos](https://www.desmos.com/calculator/y4neofo1zw)).
+If we instead use the mean of our samples, we fix the concave case but now
+we'll end up submerged in convex areas. To get the best of both, we just take
+the `max` of the center sample or the edge samples' mean
+([desmos](https://www.desmos.com/calculator/y4neofo1zw)).
 
 ```gdscript
 # for central differences, re-use the samples
@@ -240,11 +249,15 @@ parent.velocity.y = impulse.y
 
 {{<video "swim.webm" >}}
 
-## Conclusion
+## What's next
 
-Both the game's frame-budget and my own free time to work on personal projects
-are limited. It might be fun to implement a proper plane fitting algorithm such
-as [Least Squares](https://en.wikipedia.org/wiki/Least_squares) or [Principal
-Component
-Analysis](https://en.wikipedia.org/wiki/Principal_component_analysis), but the
-added fidelity (and noise) aren't worth the effort for this style of game.
+* Make some levels with this!
+  * Swimming/water levels. Diving?
+  * Make it so you can drive the ship.
+  * Taking advantage of the waves to gain some height could be a game mechanic.
+* A better surface shader, that uses depth and a bit of transparency.
+* ~~Foam.~~ I made foam!
+
+
+![foam](foam.png)
+

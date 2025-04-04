@@ -172,10 +172,11 @@ quite a work in progress. Currently you can import content from:
 
 Major TODOs are:
 
-* Allow saving stories to be read later
+* ~~Allow saving stories to be read later~~ Done!
 * An editor mode that allows writing and editing content directly.
-* A button that shows other potential words in the dictionary if my automated
-  mappings are wrong.
+* ~~A button that shows other potential words in the dictionary if my automated
+  mappings are wrong~~. Done!
+* ~~Custom TextPainter and Markdown support~~ Done!
 * Potentially, a curated library of content. I'm not sure how I'd source this
   legally and ethically. Unless...
 * Users or teachers could produce and share their own content, potentially
@@ -350,17 +351,31 @@ would be fun to one day play in a competition overseas in Taiwan or mainland
 China. Besides the daily review, you can also do a cutom review and filter
 using these tags if you're studying a particular topic.
 
-## Conclusion
-
+## What's next?
 
 {{< gallery >}}
 <img src="pics/stats.png" alt="tag on words" class="grid-w100">
 {{< /gallery >}}
+
 The main idea of the app is "bring your own content". I've been dogfooding
 it for a little while now, and it has definitely sped up my vocab acquisition.
-I'm not sure whether the long term plan is to polish it and publish it as FOSS,
-or to make it a closed source side-hustle.
+There is a lot of polish yet to be done. Scalabilty checks, testing on other devices,
+and just a couple more features:
 
-In the meantime, I'll continue to iterate. It's a slow going process and I
-just have the nights and weekends that I'm not doing other hobbies like BJJ or
-Yu-Gi-Oh. I'm happy with the progress I've made so far.
+* A screen reader to get the tap-to-lookup experience in any app. Likely
+  Android only.
+* Curated content library. Maybe even daily/weekly releases of short readers,
+  like [Maayot](https://www.maayot.com/).
+* Reccomendation algorithms to asses a new user's current Chinese level, and
+  
+* Test the pinyin model, and potentially train an additional model, to ensure
+  traditional chinese works well.
+* Integrate a higher quality dictionary. CEDIT is pretty good, but I at least need
+  to have the option to hide "Potentially innapropriate words". For example,
+  reading about [a duck (鸭) shouldn't show a slang definition "male prostitute" by
+  default.
+  ](https://www.mdbg.net/chinese/dictionary?page=worddict&email=&wdrst=0&wdqb=%E9%B8%AD)
+
+I'm not sure when it will be done.I'll continue to iterate. It's a slow going
+process and I just have the nights and weekends that I'm not doing other
+hobbies and work. Hopefully I can make this project a priority in the near future.

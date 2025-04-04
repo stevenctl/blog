@@ -17,9 +17,9 @@ I want to use heightmaps to add details without extra geometry. The concern is
 mostly on my workflow, not on performance. I'm simply too lazy to model that into
 my modules in a tileable way.
 
-The effect is turned up a bit to make it extra apparent int he sample. The floor
-shouldn't be offset so strongly if you want to have a character walk on it without
-them appearing to levitate.
+The effect is turned up a bit to make it extra apparent int the images here.
+The floor shouldn't be offset so strongly if you want to have a character walk
+on it without them appearing to levitate.
 
 ## Heightmap with Deep Parallax
 
@@ -36,11 +36,10 @@ tutorial, and I think the results are just fine.
 
 ## The Shader
 
-Here's the code for those who are interested. It's mostly me gluing code from
-various tutorials together. Also there's some unnessary conditionals I have for
-toggling the ability to use two sets of textures for the walls and floor. In
-reality there should be a separate shader for each, or some preprocessor stuff
-instead of a runtime check.
+It's mostly gluing code from various tutorials together. Also there's some
+unnessary conditionals I have for toggling the ability to use two sets of
+textures for the walls and floor. In reality there should be a separate shader
+for each, or some preprocessor stuff instead of a runtime check.
 
 ```c
 shader_type spatial;
