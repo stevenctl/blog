@@ -1,0 +1,25 @@
+{{- $emoji := .Get "emoji" | default "ℹ️" -}}
+<div class="alert">
+  <span class="alert-emoji">{{ $emoji }}</span>
+  <div class="alert-content">
+    {{ .Inner | .Page.RenderString }}
+  </div>
+</div>
+<style>
+.alert {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  background: var(--code-bg, #f5f5f5);
+  border-left: 4px solid var(--primary, #007acc);
+  border-radius: 4px;
+}
+.alert-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.alert-content {
+  flex: 1;
+}
+</style>

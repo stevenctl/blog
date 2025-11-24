@@ -1,0 +1,44 @@
+<div class="gallery">
+  {{ .Inner }}
+</div>
+<style>
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+  justify-content: center;
+}
+.gallery img {
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+
+.grid-w66 {
+  flex: 1 1 calc(66.66% - 0.5rem);
+  min-width: 200px;
+  max-width: calc(66.66% - 1rem);
+}
+
+.grid-w50 {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 200px;
+  max-width: calc(50% - 1rem);
+}
+
+.grid-w33 {
+  flex: 1 1 calc(33.33% - 0.66rem);
+  min-width: 150px;
+  max-width: calc(33.33% - 1rem);
+}
+
+.grid-w25 {
+  flex: 1 1 calc(25% - 0.75rem);
+  min-width: 120px;
+  max-width: calc(25% - 1rem);
+}
+
+
+
+</style>

@@ -1,7 +1,18 @@
-title = "Steven's blog"
+languageName = "English"
+weight = 1
 
-[author]
-name = "Steven Landow"
-links = [
-  { github = "https://github.com/stevenctl" }
-]
+[taxonomies]
+category = "categories"
+tag = "tags"
+
+[[menu.main]]
+identifier = "search"
+name = "Search"
+url = "/search/"
+weight = 10
+
+[[menu.main]]
+identifier = "tags"
+name = "Tags"
+url = "/tags/"
+weight = 20

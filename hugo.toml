@@ -1,4 +1,36 @@
 baseURL = 'https://landow.dev/'
-languageCode = 'en'
+languageCode = 'en-us'
+title = "Steven's blog"
+
+enableInlineShortcodes = true
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+enableEmoji = true
+pygmentsUseClasses = true
+
+[minify]
+disableXML = true
+
+[pagination]
+disableAliases = false
+pagerSize = 10
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[params]
+mainSections = ["posts", "tech", "art"]
+
 [markup.goldmark.renderer]
-unsafe= true
+unsafe = true
+
+[markup.highlight]
+noClasses = false
+
+[services.instagram]
+disableInlineCSS = true
+
+[services.x]
+disableInlineCSS = true

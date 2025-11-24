@@ -1,4 +1,0 @@
----
-title: Doodles
-menu: main
----

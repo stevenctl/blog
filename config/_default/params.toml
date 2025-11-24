@@ -1,26 +1,60 @@
-colorscheme = "avocado"
-logo="logo.png"
+# PaperMod configuration
+env = "production"
+description = "This is where I post about my side projects so I can feel like I actually shipped something."
+author = "Steven Landow"
 
-mainSections=["posts", "tech"]
-enableSearch=false
-autoSwitchAppearance=false
+defaultTheme = "auto"
+ShowAuthor = false
+ShowReadingTime = false
+ShowShareButtons = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+ShowWordCount = false
+ShowRssButtonInSectionTermList = true
+ShowAllPagesInArchive = true
+ShowPageNums = true
+ShowToc = true
+disableSpecial1stPost = false
+displayFullLangName = true
 
-[homepage]
-layout="custom"
-# layout="page"
-homepageImage="train.png"
+# Profile mode is DISABLED to show post list with info
+[profileMode]
+enabled = false
 
-[article]
-showDate=false
-showReadingTime=false
-showWordCount=false
-showZenMode=false
-showAuthor=false
-showTableOfContents=true
+# Home info params - this shows above the post list
+[homeInfoParams]
+Title = "Steven's blog"
+Content = """
+This is where I post about my side projects so I can feel like I actually shipped something.
 
-[list]
-# showHero=true
-# heroStyle="basic"
-groupByYear=false
-showCards=true
-cardView=true
+<br/>
+
+One day maybe I'd like to make a game. Currently focused on learning Mandarin,
+and building an app, [Bookchoy](https://bookchoy.app) to help with that.
+
+<br/>
+
+Engineer at [Solo.io](https://solo.io), but I don't write about much networking/infra/work stuff here.
+"""
+
+# Social icons
+[[socialIcons]]
+name = "github"
+title = "View my GitHub"
+url = "https://github.com/stevenctl"
+
+[[socialIcons]]
+name = "linkedin"
+title = "Connect on LinkedIn"
+url = "https://www.linkedin.com/in/slandow/"
+
+# Edit post configuration (optional)
+# [editPost]
+# URL = "https://github.com/stevenctl/blog/tree/main/content"
+# Text = "Suggest Changes"
+# appendFilePath = true
+
+# Asset configuration
+[assets]
+disableHLJS = true
