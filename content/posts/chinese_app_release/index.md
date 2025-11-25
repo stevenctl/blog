@@ -145,12 +145,53 @@ so that word lists can include jargon that might not be in a standard dictionary
 {{< /gallery >}}
 
 
-**Better accuracy in word mappings**
+**Re-trained Word Mapping Model**
 
-As I detailed in the [last post](/posts/chinese_app_og/), the training data
-wasn't perfect. It's still not perfect, but after a round of training with
-cleaner data I can confidently say it's better. I don't want to provid a number
-here yet, but I anticipate getting this to several 9's of accuracy soon.
+It turned out there was a lot wrong with the data I was using to train the
+pinyin model. The dataset I used was a large corpus of Chinese sentences
+from the web, and I didn't realize it was parsed using [python-pinyin-jyutping-sentence](https://github.com/Vocab-Apps/python-pinyin-jyutping-sentence).
+I was essentially training on the output of a mostly rules-based system and
+learning its innacuracies.
+
+I took that same corpus combined with candidate mappings from a dictionary
+and ran it through an LLM (gpt-5-mini and gemini-3 preview). The LLM did
+a much better job of word segmentation, and selecting the correct pinyin
+for each word in context.
+
+```
+Total sentences in validation set: 528
+Sentences with differences: 452 (85.6%)
+Total characters: 14201
+Total matches: 12508
+Overall library vs LLM accuracy: 88.08%
+```
+
+The library failed on very common cases, both on tones and pronunciations:
+
+```
+'地' (114x): llm='de' vs lib='dì' (112x) +2 more patterns
+'都' (66x): llm='dōu' vs lib='dū' (64x) +2 more patterns
+'来' (48x): llm='lai' vs lib='lái' (35x) +10 more patterns
+'还' (47x): llm='hái' vs lib='huán' (44x) +3 more patterns
+'个' (46x): llm='ge' vs lib='gè' (41x) +5 more patterns
+'得' (44x): llm='de' vs lib='dé' (44x)
+'的' (43x): llm='de' vs lib='yī' (4x) +34 more patterns
+'奶' (43x): llm='nai' vs lib='nǎi' (40x) +3 more patterns
+'更' (39x): llm='gèng' vs lib='gēng' (34x) +5 more patterns
+'什' (36x): llm='shén' vs lib='shí' (36x)
+```
+
+
+I'm much more confident on the new model which is trained on more data, and
+cleaner data.
+
+I also realized [ckip-transformers]() has a GPL license. Although I may open
+source eventually, but not just throw my amalgm of LLM generated helper scripts
+and hacks on GitHub. For now, I've switched to
+[UER-py](https://github.com/dbiir/UER-py/). The
+`uer/albert-base-chinese-cluecorpussmall` has the exact same architecture and
+vocab as the CKIP model, so it was a drop-in replacement.
+
 
 **Optimized data sync**
 
