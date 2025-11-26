@@ -153,20 +153,11 @@ from the web, and I didn't realize it was parsed using [python-pinyin-jyutping-s
 I was essentially training on the output of a mostly rules-based system and
 learning its innacuracies.
 
-I took that same corpus combined with candidate mappings from a dictionary
-and ran it through an LLM (gpt-5-mini and gemini-3 preview). The LLM did
-a much better job of word segmentation, and selecting the correct pinyin
-for each word in context.
-
-```
-Total sentences in validation set: 528
-Sentences with differences: 452 (85.6%)
-Total characters: 14201
-Total matches: 12508
-Overall library vs LLM accuracy: 88.08%
-```
-
-The library failed on very common cases, both on tones and pronunciations:
+I took that same corpus combined with candidate mappings from a dictionary and
+ran it through an LLM (gpt-5-mini and gemini-3 preview). The LLM did a much
+better job of word segmentation, and selecting the correct pinyin for each word
+in context. The library failed on very common cases, both on tones and
+pronunciations:
 
 ```
 '地' (114x): llm='de' vs lib='dì' (112x) +2 more patterns
@@ -184,6 +175,27 @@ The library failed on very common cases, both on tones and pronunciations:
 
 I'm much more confident on the new model which is trained on more data, and
 cleaner data.
+
+
+| Model                                 | Seq Acc | Token Acc | Seq (no tone) | Token (no tone) | Polyphone |
+|---------------------------------------|---------|-----------|---------------|-----------------|-----------|
+| pinyin_jyutping_sentence (baseline)   | 5.36%   | 96.55%    | 42.91%        | 98.20%          | 91.74%    |
+| Albert-Base Old Dataset               | 0.64%   | 95.61%    | 43.91%        | 99.15%          | 93.77%    |
+| Albert-Base New Dataset (attempt 1)   | 28.21%  | 98.67%    | 58.33%        | 99.40%          | 98.13%    |
+| Albert-Base New Dataset (attempt 2)   | 39.42%  | 98.99%    | 70.19%        | 99.59%          | 98.54%    |
+
+
+> Attempt 1: Overcomplicatd pipeline with spcecial loss to try to emphasize
+> polyphones.
+>
+> Attempt 2: Simpler pipeline, fine tuning step just focuses on
+> confusion set from main training step. Also I remembered to turn on gradient
+> clipping!
+
+It's helpful to look at the accuracy ignoring tones in order to get an idea of
+whether it's getting the overall syllable or tone wrong. The "sequence"
+accuracy is whether any word in a 128 token sequence (batches of sentences) is
+wrong, so it's much naturally much lower.
 
 I also realized [ckip-transformers]() has a GPL license. Although I may open
 source eventually, but not just throw my amalgm of LLM generated helper scripts
