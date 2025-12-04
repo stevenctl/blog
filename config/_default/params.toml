@@ -49,6 +49,11 @@ name = "linkedin"
 title = "Connect on LinkedIn"
 url = "https://www.linkedin.com/in/slandow/"
 
+[[socialIcons]]
+name = "rss"
+title = "RSS Feed"
+url = "https://landow.dev/index.xml"
+
 # Edit post configuration (optional)
 # [editPost]
 # URL = "https://github.com/stevenctl/blog/tree/main/content"
