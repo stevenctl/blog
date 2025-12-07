@@ -1,7 +1,7 @@
 ---
 title: Non-Destructive Terrain Editor
+date: 2023-01-01
 type: tech
-weight: 930
 tags: ["gamedev", "godot", "procedural", "terrain"]
 ---
 

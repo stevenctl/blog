@@ -1,7 +1,7 @@
 ---
 title: Triplanar with Deep Parallax in Godot
+date: 2022-12-23
 type: tech
-weight: 950
 tags: ["gamedev", "godot", "shaders", "graphics"]
 ---
 

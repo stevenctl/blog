@@ -1,7 +1,7 @@
 ---
 title: "3D Autotiling pt. 2: Expanding and Optimizing"
+date: 2023-09-13
 type: tech
-weight: 905
 tags: ["gamedev", "procedural-generation", "wfc", "blender"]
 ---
 

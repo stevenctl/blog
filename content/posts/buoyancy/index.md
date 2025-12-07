@@ -1,7 +1,7 @@
 ---
 title: Faking Buoyancy
+date: 2023-07-04
 type: tech
-weight: 920
 tags: ["gamedev", "godot", "shaders", "procedural"]
 ---
 

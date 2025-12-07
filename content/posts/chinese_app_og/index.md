@@ -1,7 +1,7 @@
 ---
 title: "Building my own app for learning Chinese"
+date: 2025-07-13
 type: tech
-weight: 900
 tags: ["language-learning", "app-development", "chinese"]
 ---
 

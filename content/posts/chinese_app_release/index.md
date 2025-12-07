@@ -1,8 +1,7 @@
 ---
-
 title: "I'm gonna release my Chinese app"
+date: 2025-12-01
 type: tech
-weight: 890
 tags: ["language-learning", "app-development", "chinese"]
 ---
 

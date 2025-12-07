@@ -1,7 +1,7 @@
 ---
 title: "3D Autotiling pt. 1: Basic WFC"
+date: 2023-09-13
 type: tech
-weight: 910
 tags: ["gamedev", "procedural-generation", "wfc", "blender"]
 ---
 

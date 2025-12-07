@@ -1,9 +1,9 @@
 ---
 title: My First Character Models
+date: 2022-12-20
 type: art
 layout: "simple"
 tags: ["art", "blender", "3d-modeling", "characters"]
-weight: 10000
 ---
 
 {{<video "showcase.webm">}}

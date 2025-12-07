@@ -1,8 +1,7 @@
 ---
-
 title: "mini apps"
+date: 2025-12-07
 type: tech
-weight: 889
 tags: ["random"]
 ---
 

@@ -1,10 +1,10 @@
 ---
 title: Train Station
+date: 2022-12-20
 type: art
 showTableOfContents: false
 layout: "simple"
 tags: ["art", "blender", "3d-modeling", "architecture"]
-weight: 9000
 ---
 
 I saw [this](https://joshuaautumn.artstation.com/projects/qAmeAz) picture on
