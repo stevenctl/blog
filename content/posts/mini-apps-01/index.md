@@ -45,10 +45,12 @@ A quick search shows me some not amazing options (for my minimal needs):
   - 130MB is better. I like that the premium version is a one time purchase. The UI is pretty crowded
     compared to what I need, but this actually seems decent.
 
-
-Using AI, we can free ourselves from subscriptions, social features, and AI
-jamming itself into simple apps. Just make the exact app you want. Being a
-programmer helps a lot here when the AI starts going down the wrong path.
+I am _not_ saying the people who create these apps don't deserve to be paid for
+their work, and that these apps are bad. Clearly there is a market for them.
+They're just not what I'm looking for. Using AI, we can free ourselves from
+subscriptions, social features, and AI jamming itself into simple apps. Just
+make the exact app you want. Being a programmer helps a lot here when the AI
+starts going down the wrong path.
 
 
 #### Speed (as a user)
