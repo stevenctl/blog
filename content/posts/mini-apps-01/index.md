@@ -1,6 +1,6 @@
 ---
 title: "mini apps"
-date: 2025-12-07
+date: 2025-12-11
 type: tech
 tags: ["random"]
 ---
@@ -25,10 +25,40 @@ python -m http.server 9999
 
 ### Motivation
 
+For the most part, when you want a simple app that does one thing, you will
+have to search pretty hard. Most of the stuff out there is crammed with
+features you didn't ask for, ads, some kind of login and probably other types
+of bloat I can't think of right now. Oh, AI features you didn't want.
+
+For example, I want a macro tracker app. Super simple requirement:
+- fast UI that lets me input 3 numbers (fat, protein, carbs) and maybe a food name.
+- bonus would be something to scan a barcode or nutrion label with my phone camera
+- extra bonus would be to sync the data across devices
+
+A quick search shows me some not amazing options (for my minimal needs):
+* [MacroFactor](https://macrofactorapp.com/macrofactor/)
+  - 250MB! AI recognition of pictures of entire meals. Calculators I don't
+    want.
+- [MyFitnessPal](https://www.myfitnesspal.com/)
+  - Even bigger at 280MB! Ads, subscriptions, social features I don't want.
+- [Stupid Simple Macro Tracker](https://www.mystupidsimpleapp.com/stupid-simple-macros)
+  - 130MB is better. I like that the premium version is a one time purchase. The UI is pretty crowded
+    compared to what I need, but this actually seems decent.
+
+
+Using AI, we can free ourselves from subscriptions, social features, and AI
+jamming itself into simple apps. Just make the exact app you want. Being a
+programmer helps a lot here when the AI starts going down the wrong path.
+
+
+#### Speed (as a user)
+
 I really love local-first software. Local-only software is even better. Even
 though these apps can be accessed online via github pages, you can run them
 locally with minimal or no setup. The data backing them should load very very
 fast.
+
+#### Speed (as a developer)
 
 The code is 70-90% AI generated. I just had some stuff that I wanted to use
 and iterating on this with Claude Code was a fun thing to do while I waited
