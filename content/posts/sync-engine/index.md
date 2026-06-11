@@ -432,6 +432,49 @@ We can get a list of what rows changed and perform some action after the sync
 finishes. Here I have some things that fetch files from object storage, or
 perform other re-indexing/bookkeeping operations.
 
+## Big initial sync could be slow
+
+This is a problem in both versions. In the old version I worked around this by doing
+a `count` to get an idea of how many pages I needed, then send some rate-limited parallel
+requests for all the pages.
+
+The pages in the old system were maxed out at 1000 rows, PostgREST default limit.
+In the new version, the RPC design lets me do whatever I want. I tuned to around 4k
+row pages for certain tables to minimize HTTP round trips.
+
+The first draft of the new engine serialized the pagination though. A small optimization
+here is to make sure the writes to the local database aren't serialized along with the network
+I/O, so the total time is `max(network, local apply)`, not `network + local apply`.
+
+```
+network:   [── pull p1 ──][── pull p2 ──][── pull p3 ──]
+local:                    [ apply p1 ]   [ apply p2 ]   [ apply p3 ]
+cursor:                              ▲p1            ▲p2            ▲p3
+```
+
+Finally, we do want some parallelization. After our first fetch, we can discover
+we need more pages, we can then grab `pull_boundaries` and fetch ranges in
+parallel (concurrency limited).
+
+```
+  page 1 ──► has_more ──┬──► page 2          (since = p1.next_seq, known already)
+                        └──► pull_boundaries ──► pages 3..K in parallel
+```
+
+We do not advance the cursor in a way that skips any pages, so if we miss one
+of our parallel fetches, a future sync will re-pull pages.
+
+```
+rows by server_wrote_at:        committed ──────────┐   still in-flight
+    ───●───●───●────●──●─●──●─●──●─────────────────────○──○────▶ time
+       └── page 1 ──┴── page 2 ──┘                     fetched out of
+          applied, cursor here ▲                       order, applied later
+
+new rows can only come after the pages we're fetching ─────────────▶
+```
+
+
+
 ## Can we avoid touching user tables?
 
 I didn't love the fact that this engine would `ALTER` my tables. I wanted to
