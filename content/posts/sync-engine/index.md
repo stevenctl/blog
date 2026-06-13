@@ -513,6 +513,42 @@ changes. For me, the operational cost of dirtying my tables with system stuff
 is fine. If this framework was a library for others to use, it should be
 feasible to make this tradeoff configurable.
 
+
+## Schema drift
+
+The schema will inevitably change as the app evovles. Usually, hopefully
+always, the server before the client. When the client receives columns from the
+server it doesn't know what to do with, ignoring the row wholesale and
+re-pulling it every time isn't a great experience. There are a ton of features
+that depend on one column and don't care about the new column and we shouldn't
+break sync for them.
+
+To handle this, the engine adds a client-side `_syncable_overflow` JSON column
+to dump the stuff we don't know about yet.
+
+```
+ new client writes:   { id, note, streak_count }      ← streak_count is new
+                                │ pull
+                                ▼
+  old client (no streak_count column):
+     id, note  ───────────────► real columns
+     streak_count ────────────► _syncable_overflow = {"streak_count": 7}
+                                │ push (later edit to note)
+                                ▼
+  server splices overflow back out:
+     note         ← from the old client (changed)
+     streak_count ← 7, restored from overflow, never clobbered
+```
+
+On pull, the engine just dumps unknown state there, and on push we can
+gracefully handle missing columns. Rather than doing LWW for the whole row,
+missing columns preserve their remote copy as the client can't have changed
+them.
+
+During engine init (~app launch), after applying any local migrations we scan
+for `_syncable_overflow IS NOT NULL` and attempt to reconcile things back into
+real columns.
+
 ## Where it landed
 
 | phase (per table) | old engine | new engine | winner |
