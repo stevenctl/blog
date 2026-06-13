@@ -1,7 +1,7 @@
 ---
 title: "福州话字典:美全八音"
 date: 2026-06-13
-type: chinese
+type: tech
 tags: ["random", "中文"]
 ---
 
